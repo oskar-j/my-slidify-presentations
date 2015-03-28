@@ -3,7 +3,7 @@ title       : GitHub discussion pages
 subtitle    : First glance at text-data
 author      : Oskar Jarczyk
 job         : Powered by R, Slidify, FTW!
-framework   : revealjs        # {io2012, html5slides, shower, dzslides, ...}
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
 highlighter : highlight.js  # {highlight.js, prettify, highlight}
 hitheme     : tomorrow      #
 widgets     : [mathjax, quiz, bootstrap] # {mathjax, quiz, bootstrap}
@@ -25,7 +25,7 @@ knit        : slidify::knit2slides
 5. Summary and Q&A time.
 
 <div class="well well-sm">
-<p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p><p>If it's a stationary presentation, please ignore this message.</p>
+<p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p>
 </div>
 
 --- .class #id 
