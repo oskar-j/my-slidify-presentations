@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GitHub discussion pages</title>
+  <meta charset="utf-8">
+  <meta name="description" content="GitHub discussion pages">
+  <meta name="author" content="Oskar Jarczyk">
+  <meta name="generator" content="slidify" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/default.css" media="all" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/phone.css" 
+    media="only screen and (max-device-width: 480px)" >
+  <link rel="stylesheet" href="libraries/frameworks/io2012/css/slidify.css" >
+  <link rel="stylesheet" href="libraries/highlighters/highlight.js/css/tomorrow.css" />
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->  <link rel=stylesheet href="libraries/widgets/quiz/css/demo.css"></link>
+<link rel=stylesheet href="libraries/widgets/bootstrap/css/bootstrap.css"></link>
+<link rel=stylesheet href="./assets/css/ribbons.css"></link>
+
+  
+  <!-- Grab CDN jQuery, fall back to local if offline -->
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+  <script>window.jQuery || document.write('<script src="libraries/widgets/quiz/js/jquery.js"><\/script>')</script> 
+  <script data-main="libraries/frameworks/io2012/js/slides" 
+    src="libraries/frameworks/io2012/js/require-1.0.8.min.js">
+  </script>
+  
+  
+
+</head>
+<body style="opacity: 0">
+  <slides class="layout-widescreen">
+    
+    <!-- LOGO SLIDE -->
+        <slide class="title-slide segue nobackground">
+  <hgroup class="auto-fadein">
+    <h1>GitHub discussion pages</h1>
+    <h2>First glance at text-data</h2>
+    <p>Oskar Jarczyk<br/>Powered by R, Slidify, FTW!</p>
+  </hgroup>
+  <article></article>  
+</slide>
+    
+
+    <!-- SLIDES -->
+    <slide class="" id="slide-1" style="background:;">
+  <hgroup>
+    <h2>Presentation agenda</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>How I gathered discussions from the GitHub,</li>
+<li>Getting more insights into what&#39;s there,
+
+<ul>
+<li>global data and &quot;private&quot; chats from all over the world</li>
+<li>calculated simple yet meaningfull statistics</li>
+</ul></li>
+<li>The discussion network,
+
+<ul>
+<li>vaious definitions, multiple subnetworks, but same data</li>
+<li>a true social network - people who spoke AND coded together</li>
+</ul></li>
+<li>What I found out, some results,
+
+<ul>
+<li>you will be the very first few in the world, to who I will present some interesting findings about utterances on the GitHub</li>
+</ul></li>
+<li>Summary and Q&amp;A time.</li>
+</ol>
+
+<div class="well well-sm">
+<p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p><p>If it's a stationary presentation, please ignore this message.</p>
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="class" id="id" style="background:;">
+  <hgroup>
+    <h2>Handouts</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class='well'>
+<p>You can download this presentation offline here:</p>
+</div>
+
+<div class='well'>
+<p>Sources and data is available here:</p>
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-3" style="background:;">
+  <hgroup>
+    <h2>Quiz</h2>
+  </hgroup>
+  <article data-timings="">
+    
+<div class="quiz quiz-single well ">
+  <p>In which way would you describe the discussion dimension in the GitHub portal?</p>
+
+<ol>
+<li><em>A feedback mechanism, place for discussion, bug-list and task delegation, accessible through GitHub webpages. It is a dialogue between developers and/or users held under a code change, code integration or issue submission.</em></li>
+<li>An exchange postbox, available as newsgroup protocol, created automaticly for every GitHub code repository, which you can add to e.g. Microsoft Outlook and automaticly get new messages.</li>
+<li>Exchanging messages between programmers strictly through <i>git commit</i> messages and other git features like <i>git blame</i>.</li>
+<li>None of those.</li>
+</ol>
+
+  <button class="quiz-submit btn btn-primary">Submit</button>
+  <button class="quiz-toggle-hint btn btn-info">Show Hint</button>
+  <button class="quiz-show-answer btn btn-success">Show Answer</button>
+  <button class="quiz-clear btn btn-danger">Clear</button>
+  
+  <div class="quiz-hint">
+  <p>Programmers on GitHub discuss their work and ask for pull-requests (of code they created) with help of the GitHub web interface.</p>
+
+</div>
+<div class="quiz-explanation">
+  <p><strong>2nd</strong> is incorrect, despite the fact you can get notifications on your e-mail about new comments, there is no such thing as a seperate newsgroup. <strong>3rd</strong> is incorrect - while of course proper title of the commit is an important part of communication inside the team, the main action is happening on the github pages, under particular commit / issue / pull request pages. <strong>1st answer is correct</strong>.</p>
+
+</div>
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-4" style="background:;">
+  <hgroup>
+    <h3>Possible data-sources</h3>
+  </hgroup>
+  <article data-timings="">
+    <p>Data acquisition. Hence <strong>3</strong> types of discussions: dialogue under issue/feature page, dialogue under a code commit, and a dialogue page under a pull request page. And you can get them from:</p>
+
+<div style='float:left;width:48%;' class='centered'>
+  <p><strong>GitHub Archive</strong></p>
+
+<ul>
+<li>document-oriented data</li>
+<li>document structure, vulnerable to constant change</li>
+<li>unlimited time periods and easy refill from the GitHub Archive</li>
+<li>includes only a full body of <em>PullRequest</em> comment, rest of utterances one needs to download directly from the GitHub</li>
+<li>includes much more of <em>meta-information</em></li>
+</ul>
+
+</div>
+<div style='float:right;width:48%;'>
+  <p><strong>GitHub Torrent</strong></p>
+
+<ul>
+<li>table-suctured relational data</li>
+<li>well structured - they&#39;re in defined database tables</li>
+<li>time period limited to the date of last SQL dumps</li>
+<li>includes the body (message) of only <em>PullRequest</em> comment and a <em>Commit</em> comment, body <strong>is truncated to 256 chars</strong> :(</li>
+<li>includes additional information about <em>timestamp, author, and commit id / pull request id</em>, but nothing more</li>
+</ul>
+
+</div>
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h2>Creating discussion network</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
+    <h2>Network properties</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class='well'>
+<p>Calculating any properties at all in a reasonable period of time was unreal. Even when using the cutoff parameter (where possible), I got nothing.</p>
+</div>
+
+<pre><code class="r">library(igraph)
+
+mycutoff &lt;- 3
+
+betweenness(g, directed = FALSE, weights = E(g)$weight, normalized = FALSE)
+edge.betweenness(g, directed = FALSE, weights = E(g)$weight)
+betweenness.estimate(g, directed = FALSE, cutoff = mycutoff,
+                     weights = E(g)$weight, nobigint = TRUE)
+
+walktrap.community(g, weights = E(g)$weight, steps = 4, merges =
+                      TRUE, modularity = TRUE, membership = TRUE)
+fastgreedy.community(g, merges=TRUE, modularity=TRUE,
+                     membership=TRUE, weights=E(g)$weight)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Network propertes (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+    <slide class="backdrop"></slide>
+  </slides>
+  <div class="pagination pagination-small" id='io2012-ptoc' style="display:none;">
+    <ul>
+      <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=1 title='Presentation agenda'>
+         1
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=2 title='Handouts'>
+         2
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=3 title='Quiz'>
+         3
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=4 title='Possible data-sources'>
+         4
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=5 title='Creating discussion network'>
+         5
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=6 title='Network properties'>
+         6
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=7 title='Network propertes (2)'>
+         7
+      </a>
+    </li>
+  </ul>
+  </div>  <!--[if IE]>
+    <script 
+      src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">  
+    </script>
+    <script>CFInstall.check({mode: 'overlay'});</script>
+  <![endif]-->
+</body>
+  <!-- Load Javascripts for Widgets -->
+  <script src="libraries/widgets/quiz/js/jquery.quiz.js"></script>
+<script src="libraries/widgets/quiz/js/mustache.min.js"></script>
+<script src="libraries/widgets/quiz/js/quiz-app.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootstrap.min.js"></script>
+<script src="libraries/widgets/bootstrap/js/bootbox.min.js"></script>
+
+  <!-- MathJax: Fall back to local if CDN offline but local image fonts are not supported (saves >100MB) -->
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [['$','$'], ['\\(','\\)']],
+        processEscapes: true
+      }
+    });
+  </script>
+  <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  <!-- <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script> -->
+  <script>window.MathJax || document.write('<script type="text/x-mathjax-config">MathJax.Hub.Config({"HTML-CSS":{imageFont:null}});<\/script><script src="libraries/widgets/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"><\/script>')
+</script>
+<script>  
+  $(function (){ 
+    $("#example").popover(); 
+    $("[rel='tooltip']").tooltip(); 
+  });  
+  </script>  
+  <!-- LOAD HIGHLIGHTER JS FILES -->
+  <script src="libraries/highlighters/highlight.js/highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <!-- DONE LOADING HIGHLIGHTER JS FILES -->
+   
+  </html>

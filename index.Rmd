@@ -1,0 +1,113 @@
+---
+title       : GitHub discussion pages
+subtitle    : First glance at text-data
+author      : Oskar Jarczyk
+job         : Powered by R, Slidify, FTW!
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      #
+widgets     : [mathjax, quiz, bootstrap] # {mathjax, quiz, bootstrap}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+---
+
+## Presentation agenda
+
+1. How I gathered discussions from the GitHub,
+2. Getting more insights into what's there,
+  * global data and "private" chats from all over the world
+  * calculated simple yet meaningfull statistics
+3. The discussion network,
+  * vaious definitions, multiple subnetworks, but same data
+  * a true social network - people who spoke AND coded together
+4. What I found out, some results,
+  * you will be the very first few in the world, to who I will present some interesting findings about utterances on the GitHub
+5. Summary and Q&A time.
+
+<div class="well well-sm">
+<p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p><p>If it's a stationary presentation, please ignore this message.</p>
+</div>
+
+--- .class #id 
+
+## Handouts
+
+<div class='well'>
+<p>You can download this presentation offline here:</p>
+</div>
+<div class='well'>
+<p>Sources and data is available here:</p>
+</div>
+
+--- &radio
+
+## Quiz
+
+In which way would you describe the discussion dimension in the GitHub portal?
+
+1. _A feedback mechanism, place for discussion, bug-list and task delegation, accessible through GitHub webpages. It is a dialogue between developers and/or users held under a code change, code integration or issue submission._
+2. An exchange postbox, available as newsgroup protocol, created automaticly for every GitHub code repository, which you can add to e.g. Microsoft Outlook and automaticly get new messages.
+3. Exchanging messages between programmers strictly through <i>git commit</i> messages and other git features like <i>git blame</i>.
+4. None of those.
+
+*** .hint
+
+Programmers on GitHub discuss their work and ask for pull-requests (of code they created) with help of the GitHub web interface.
+
+*** .explanation
+
+**2nd** is incorrect, despite the fact you can get notifications on your e-mail about new comments, there is no such thing as a seperate newsgroup. **3rd** is incorrect - while of course proper title of the commit is an important part of communication inside the team, the main action is happening on the github pages, under particular commit / issue / pull request pages. **1st answer is correct**.
+
+--- &twocol w1:50% w2:50%
+### Possible data-sources   
+Data acquisition. Hence **3** types of discussions: dialogue under issue/feature page, dialogue under a code commit, and a dialogue page under a pull request page. And you can get them from:
+
+*** =left
+
+**GitHub Archive**
+- document-oriented data
+- document structure, vulnerable to constant change
+- unlimited time periods and easy refill from the GitHub Archive
+- includes only a full body of *PullRequest* comment, rest of utterances one needs to download directly from the GitHub
+- includes much more of *meta-information*
+
+*** =right
+
+**GitHub Torrent**
+- table-suctured relational data
+- well structured - they're in defined database tables
+- time period limited to the date of last SQL dumps
+- includes the body (message) of only *PullRequest* comment and a *Commit* comment, body **is truncated to 256 chars** :(
+- includes additional information about *timestamp, author, and commit id / pull request id*, but nothing more
+
+---
+
+## Creating discussion network
+
+---
+
+## Network properties
+
+<div class='well'>
+<p>Calculating any properties at all in a reasonable period of time was unreal. Even when using the cutoff parameter (where possible), I got nothing.</p>
+</div>
+
+```{r, eval=FALSE}
+library(igraph)
+
+mycutoff <- 3
+
+betweenness(g, directed = FALSE, weights = E(g)$weight, normalized = FALSE)
+edge.betweenness(g, directed = FALSE, weights = E(g)$weight)
+betweenness.estimate(g, directed = FALSE, cutoff = mycutoff,
+                     weights = E(g)$weight, nobigint = TRUE)
+
+walktrap.community(g, weights = E(g)$weight, steps = 4, merges =
+                      TRUE, modularity = TRUE, membership = TRUE)
+fastgreedy.community(g, merges=TRUE, modularity=TRUE,
+                     membership=TRUE, weights=E(g)$weight)
+```
+
+---
+
+## Network propertes (2)
