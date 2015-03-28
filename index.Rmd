@@ -25,7 +25,7 @@ knit        : slidify::knit2slides
 5. Summary and Q&A time.
 
 <div class="well well-sm">
-<p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p><p>If it's a stationary presentation, please ignore this message.</p>
+<p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p>
 </div>
 
 --- .class #id 
