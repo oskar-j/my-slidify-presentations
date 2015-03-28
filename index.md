@@ -88,6 +88,12 @@ Data acquisition. Hence **3** types of discussions: dialogue under issue/feature
 
 ## Network properties
 
+
+
+---
+
+## Network propertes (2)
+
 <div class='well'>
 <p>Calculating any properties at all in a reasonable period of time was unreal. Even when using the cutoff parameter (where possible), I got nothing.</p>
 </div>
@@ -111,4 +117,8 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
 
 ---
 
-## Network propertes (2)
+## (Smaller) sample discussion network
+
+```{sql}
+select * from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id;
+```

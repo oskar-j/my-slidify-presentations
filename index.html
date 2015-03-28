@@ -179,6 +179,16 @@
     <h2>Network properties</h2>
   </hgroup>
   <article data-timings="">
+    
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h2>Network propertes (2)</h2>
+  </hgroup>
+  <article data-timings="">
     <div class='well'>
 <p>Calculating any properties at all in a reasonable period of time was unreal. Even when using the cutoff parameter (where possible), I got nothing.</p>
 </div>
@@ -202,12 +212,14 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-7" style="background:;">
+<slide class="" id="slide-8" style="background:;">
   <hgroup>
-    <h2>Network propertes (2)</h2>
+    <h2>(Smaller) sample discussion network</h2>
   </hgroup>
   <article data-timings="">
-    
+    <pre><code class="sql">select * from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id;
+</code></pre>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -256,6 +268,12 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
       <a href="#" target="_self" rel='tooltip' 
         data-slide=7 title='Network propertes (2)'>
          7
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=8 title='(Smaller) sample discussion network'>
+         8
       </a>
     </li>
   </ul>
