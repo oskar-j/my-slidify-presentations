@@ -83,10 +83,14 @@ Programmers on GitHub discuss their work and ask for pull-requests (of code they
 
 ### What you need to know
 
-* Discussion, same as wiki pages and README files, uses a Markdown syntax.
-* It also have emoticons
+* Discussion, same as wiki pages and README files, uses a Markdown syntax
+* It also have emoticons placed between double-colons, e.g. :+1: 
 * You can cite somebody or call him by login (with the '@' char)
-* Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission.
+* Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission
+* You can paste code blocks and ony objects supported by Markdown syntax
+* Detecting quoting is tricky, but in most cases, it is recognized by this pattern:
+  * starts with: "On [date] user <e-mail> wrote:"
+  * '>' char starting every line in-a-quote
 
 --- &twocol w1:50% w2:50%
 ### Possible data-sources
@@ -116,7 +120,7 @@ Data acquisition. Hence **3** types of discussions: dialogue under issue/feature
 
 For rapid data analysis, you can try using Google BigQuery, there is GitHub archive data already included in fast engine using propertiary BigQuery Language (BQL).
 
-Alternativly, you can use GitHub Torrent mysql web-interface (console), but don't expect good relability neither performance..
+Alternatively, you can use GitHub Torrent mysql web-interface (console), but don't expect good relability neither performance..
 
 <div class='well'>
 <p>The best of course is using local copy of GHA / GHT data.</p>
@@ -157,9 +161,21 @@ network <- sqldf("SELECT login1, login2, count(*) as weight
 network_matrix <- as.matrix(network)
 ```
 
-<div class='well'>
-<p>https://github.com/wikiteams/gh-torrent-queries/blob/master/discussions-network/analyze.R</p>
-</div>
+5\. Returns a matrix of **unique paris (Vx, Vy)**
+
+---
+
+## Creating discussion network (3)
+
+```{r, eval=FALSE}
+g = graph.edgelist(network_matrix[,1:2],directed=FALSE)
+E(g)$weight=as.numeric(network_matrix[,3])
+# Don't call plot where >1 milion nodes, reduce first
+# plot(g,layout=layout.fruchterman.reingold,edge.width=E(g)$weight)
+```
+<center>
+<img src="https://dl.dropboxusercontent.com/u/103068909/matrix.png" width="50%" height="50%" />
+</center>
 
 ---
 
@@ -223,8 +239,15 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
 ## (Smaller) sample discussion network
 
 ```{sql}
-select * from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id;
+create table github_discussions_selected_users as select d.* from github_discussions d join (select distinct user_id from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id) as s
+on d.user_id = s.user_id;
 ```
+
+* *Selected repos* is a sample created joined with a list of users (project members) but *from repositories*
+   * having at least 5 project members
+   * existing at least for 2 years
+   * with minimum of 100 commits
+* Number of utterances downgraded slightly - from 2.9 mln to 1.5 mln :(
 
 ---
 
@@ -253,6 +276,33 @@ n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
 load(file="swear_plot_obj.RData")
 n1
 ```
+
+---
+
+## NLP analysis
+
+```{python, eval=FALSE, echo=TRUE}
+from textblob import TextBlob
+text_data = gracefully_degrade_to_ascii(remove_control_characters(line[2]))
+sentyment = text_data.sentiment.polarity
+sentyment_subj = text_data.sentiment.subjectivity
+```
+
+* Utterances with positive sentiment: 1018370
+* Utterances with negative sentiment: 1905329
+* Mean sentiment for positive: 0.297915856077
+* Mean sentiment for negative: -0.0507566802789
+* Utterances with subjectivity: 1708393
+* Utterances with 0(none) subjectivity: 1215306
+* Mean subjectivity (for > 0): 0.502911222599
+
+---
+
+## NLP analysis (2)
+
+<center>
+![Sentiment through time](https://dl.dropboxusercontent.com/u/103068909/sentiment.png "Sentiment through time")
+</center>
 
 ---
 

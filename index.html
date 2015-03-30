@@ -157,10 +157,17 @@
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Discussion, same as wiki pages and README files, uses a Markdown syntax.</li>
-<li>It also have emoticons</li>
+<li>Discussion, same as wiki pages and README files, uses a Markdown syntax</li>
+<li>It also have emoticons placed between double-colons, e.g. :+1: </li>
 <li>You can cite somebody or call him by login (with the &#39;@&#39; char)</li>
-<li>Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission.</li>
+<li>Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission</li>
+<li>You can paste code blocks and ony objects supported by Markdown syntax</li>
+<li>Detecting quoting is tricky, but in most cases, it is recognized by this pattern:
+
+<ul>
+<li>starts with: &quot;On [date] user <e-mail> wrote:&quot;</li>
+<li>&#39;&gt;&#39; char starting every line in-a-quote</li>
+</ul></li>
 </ul>
 
   </article>
@@ -209,7 +216,7 @@
   <article data-timings="">
     <p>For rapid data analysis, you can try using Google BigQuery, there is GitHub archive data already included in fast engine using propertiary BigQuery Language (BQL).</p>
 
-<p>Alternativly, you can use GitHub Torrent mysql web-interface (console), but don&#39;t expect good relability neither performance..</p>
+<p>Alternatively, you can use GitHub Torrent mysql web-interface (console), but don&#39;t expect good relability neither performance..</p>
 
 <div class='well'>
 <p>The best of course is using local copy of GHA / GHT data.</p>
@@ -262,15 +269,32 @@ network &lt;- sqldf(&quot;SELECT login1, login2, count(*) as weight
 network_matrix &lt;- as.matrix(network)
 </code></pre>
 
-<div class='well'>
-<p>https://github.com/wikiteams/gh-torrent-queries/blob/master/discussions-network/analyze.R</p>
-</div>
+<p>5. Returns a matrix of <strong>unique paris (Vx, Vy)</strong></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
 <slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Creating discussion network (3)</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">g = graph.edgelist(network_matrix[,1:2],directed=FALSE)
+E(g)$weight=as.numeric(network_matrix[,3])
+# Don&#39;t call plot where &gt;1 milion nodes, reduce first
+# plot(g,layout=layout.fruchterman.reingold,edge.width=E(g)$weight)
+</code></pre>
+
+<p><center>
+<img src="https://dl.dropboxusercontent.com/u/103068909/matrix.png" width="50%" height="50%" />
+</center></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Network schema</h2>
   </hgroup>
@@ -299,7 +323,7 @@ network_matrix &lt;- as.matrix(network)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-11" style="background:;">
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h2>Network properties</h2>
   </hgroup>
@@ -318,7 +342,7 @@ network_matrix &lt;- as.matrix(network)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>Network properties (2)</h2>
   </hgroup>
@@ -346,19 +370,31 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>(Smaller) sample discussion network</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code class="sql">select * from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id;
+    <pre><code class="sql">create table github_discussions_selected_users as select d.* from github_discussions d join (select distinct user_id from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id) as s
+on d.user_id = s.user_id;
 </code></pre>
+
+<ul>
+<li><em>Selected repos</em> is a sample created joined with a list of users (project members) but <em>from repositories</em>
+
+<ul>
+<li>having at least 5 project members</li>
+<li>existing at least for 2 years</li>
+<li>with minimum of 100 commits</li>
+</ul></li>
+<li>Number of utterances downgraded slightly - from 2.9 mln to 1.5 mln :(</li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
+<slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Swear words</h2>
   </hgroup>
@@ -381,7 +417,7 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-15" style="background:;">
+<slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>Swear words (2)</h2>
   </hgroup>
@@ -390,13 +426,51 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
 n1
 </code></pre>
 
-<p><iframe src=' assets/fig/unnamed-chunk-9-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
+<p><iframe src=' assets/fig/unnamed-chunk-10-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-16" style="background:;">
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
+    <h2>NLP analysis</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="python, eval=FALSE, echo=TRUE">from textblob import TextBlob
+text_data = gracefully_degrade_to_ascii(remove_control_characters(line[2]))
+sentyment = text_data.sentiment.polarity
+sentyment_subj = text_data.sentiment.subjectivity
+</code></pre>
+
+<ul>
+<li>Utterances with positive sentiment: 1018370</li>
+<li>Utterances with negative sentiment: 1905329</li>
+<li>Mean sentiment for positive: 0.297915856077</li>
+<li>Mean sentiment for negative: -0.0507566802789</li>
+<li>Utterances with subjectivity: 1708393</li>
+<li>Utterances with 0(none) subjectivity: 1215306</li>
+<li>Mean subjectivity (for &gt; 0): 0.502911222599</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-18" style="background:;">
+  <hgroup>
+    <h2>NLP analysis (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p><center>
+<img src="https://dl.dropboxusercontent.com/u/103068909/sentiment.png" alt="Sentiment through time" title="Sentiment through time">
+</center></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-19" style="background:;">
   <hgroup>
     <h2>Multilayer analysis</h2>
   </hgroup>
@@ -480,44 +554,62 @@ n1
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=10 title='Network schema'>
+        data-slide=10 title='Creating discussion network (3)'>
          10
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Network properties'>
+        data-slide=11 title='Network schema'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Network properties (2)'>
+        data-slide=12 title='Network properties'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='(Smaller) sample discussion network'>
+        data-slide=13 title='Network properties (2)'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Swear words'>
+        data-slide=14 title='(Smaller) sample discussion network'>
          14
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='Swear words (2)'>
+        data-slide=15 title='Swear words'>
          15
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Multilayer analysis'>
+        data-slide=16 title='Swear words (2)'>
          16
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=17 title='NLP analysis'>
+         17
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=18 title='NLP analysis (2)'>
+         18
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=19 title='Multilayer analysis'>
+         19
       </a>
     </li>
   </ul>
