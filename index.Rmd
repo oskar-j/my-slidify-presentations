@@ -19,7 +19,7 @@ knit        : slidify::knit2slides
   * calculated simple yet meaningfull statistics
 3. The discussion network,
   * vaious definitions, multiple subnetworks, but same data
-  * a true social network - people who spoke AND coded together
+  * a true social network - people who spoke and/or coded together and/or follow each other..
 4. What I found out, some results,
   * you will be the very first few in the world, to who I will present some interesting findings about utterances on the GitHub
 5. Summary and Q&A time.
@@ -28,15 +28,22 @@ knit        : slidify::knit2slides
 <p> <b>Note: </b> You can hit <code>[P] key</code> on any slide to reveal the source code. </p>
 </div>
 
+```{r, eval=TRUE, echo=FALSE}
+library(rCharts)
+library(knitr)
+```
+
 --- .class #id 
 
 ## Handouts
 
 <div class='well'>
-<p>You can download this presentation offline here:</p>
+<p><b>You can download this presentation offline here:</b></p>
+<p>https://github.com/oskar-j/slidify-presentations-topic1</p>
 </div>
 <div class='well'>
-<p>Sources and data is available here:</p>
+<p><b>Sources and data</b> is available here:</p>
+<p>https://github.com/wikiteams/gh-torrent-queries</p>
 </div>
 
 --- &radio
@@ -58,41 +65,138 @@ Programmers on GitHub discuss their work and ask for pull-requests (of code they
 
 **2nd** is incorrect, despite the fact you can get notifications on your e-mail about new comments, there is no such thing as a seperate newsgroup. **3rd** is incorrect - while of course proper title of the commit is an important part of communication inside the team, the main action is happening on the github pages, under particular commit / issue / pull request pages. **1st answer is correct**.
 
+---
+
+## Where discussion is taking place?
+
+<div class='well'>
+<p>Please visit this <b>'developer's manual'</b> for better insight:</p>
+<p>https://developer.github.com/guides/working-with-comments/</p>
+</div>
+<div class='well'>
+<p>If you are less familiar with GitHub, start with <b>'the guide':</b></p>
+<p>https://guides.github.com/activities/hello-world/#intro</p>
+<p>It's also called "Hello World in 10 minutes"</p>
+</div>
+
+---
+
+### What you need to know
+
+* Discussion, same as wiki pages and README files, uses a Markdown syntax.
+* It also have emoticons
+* You can cite somebody or call him by login (with the '@' char)
+* Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission.
+
 --- &twocol w1:50% w2:50%
-### Possible data-sources   
+### Possible data-sources
 Data acquisition. Hence **3** types of discussions: dialogue under issue/feature page, dialogue under a code commit, and a dialogue page under a pull request page. And you can get them from:
 
 *** =left
 
 **GitHub Archive**
-- document-oriented data
-- document structure, vulnerable to constant change
-- unlimited time periods and easy refill from the GitHub Archive
-- includes only a full body of *PullRequest* comment, rest of utterances one needs to download directly from the GitHub
-- includes much more of *meta-information*
+- document-oriented JSON data
+- document structure (MongoDB), vulnerable to constant change
+- unlimited time periods and easy refill from the GitHub Archive (wget -> mongoimport)
+- includes only a full body of *PullRequest* comment, rest of utterances one needs to download directly from the GitHub through web
+- includes much more of *meta-information*!
 
 *** =right
 
 **GitHub Torrent**
 - table-suctured relational data
-- well structured - they're in defined database tables
+- well structured - they're in defined MySQL database tables
 - time period limited to the date of last SQL dumps
 - includes the body (message) of only *PullRequest* comment and a *Commit* comment, body **is truncated to 256 chars** :(
-- includes additional information about *timestamp, author, and commit id / pull request id*, but nothing more
+- includes additional information about *timestamp, author, and commit id / pull request id*, but nothing more in particulat table..
+
+---
+
+### Possible data-sources (2)
+
+For rapid data analysis, you can try using Google BigQuery, there is GitHub archive data already included in fast engine using propertiary BigQuery Language (BQL).
+
+Alternativly, you can use GitHub Torrent mysql web-interface (console), but don't expect good relability neither performance..
+
+<div class='well'>
+<p>The best of course is using local copy of GHA / GHT data.</p>
+</div>
 
 ---
 
 ## Creating discussion network
 
+Data genesis
+
+1. I made union of Commit Comments and Pull Request Comments in MySQL instance
+2. Loaded into R and joined with GitHub users
+   ```{r, eval=FALSE}
+   dialogues_n_users <- sqldf("select d.*, u.login from dialogues d
+                              join users u on d.user_id = u.id");
+   ```
+3. Count contributions per discussion page
+   ```{r, eval=FALSE}
+   aggregates <- sqldf("select commit_id, login, count(login) as n
+                       from dialogues_n_users d group by commit_id, login");
+   ```
+
+---
+
+## Creating discussion network (2)
+
+4\. Count how many times users spoke with each other (under any discussion page - in whole GitHub)
+```{r, eval=FALSE}
+activity_network <- sqldf("SELECT a1.login as login1, a2.login as login2,
+                              a1.n as c1, a2.n as c2
+                              FROM aggregates a1
+                              LEFT JOIN aggregates a2
+                              ON a1.commit_id = a2.commit_id
+                              WHERE a1.login < a2.login;")
+network <- sqldf("SELECT login1, login2, count(*) as weight
+                 from activity_network group by login1, login2")
+network_matrix <- as.matrix(network)
+```
+
+<div class='well'>
+<p>https://github.com/wikiteams/gh-torrent-queries/blob/master/discussions-network/analyze.R</p>
+</div>
+
+---
+
+## Network schema
+
+* **Discussion** network
+
+```{wolfram, echo=TRUE}
+Graph[{B \[UndirectedEdge] A}]
+```
+<img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec1.png"/>
+
+* **Citing** network
+* **Mentioning** network
+* (both can be combined to one network)
+
+```{wolfram, echo=TRUE}
+Graph[{B \[DirectedEdge] A}]
+```
+<img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec2.png"/>
+
 ---
 
 ## Network properties
 
-
+```{r, eval=FALSE}
+> summary(dialogues_n_users)
+```
+<img src="https://dl.dropboxusercontent.com/u/103068909/summary_dialogues.png" />
+```{r, eval=FALSE}
+> summary(network_matrix)
+```
+<img src="https://dl.dropboxusercontent.com/u/103068909/summary_matrix.png" />
 
 ---
 
-## Network propertes (2)
+## Network properties (2)
 
 <div class='well'>
 <p>Calculating any properties at all in a reasonable period of time was unreal. Even when using the cutoff parameter (where possible), I got nothing.</p>
@@ -121,3 +225,42 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
 ```{sql}
 select * from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id;
 ```
+
+---
+
+## Swear words
+
+```{r, eval=FALSE}
+library(sqldf)
+library(plyr)
+library(rCharts)
+
+swear_words <- read.csv("C:/big data/swearing.csv")
+names(swear_words)[1] <- "entry"
+swear_words$entry <- as.character(swear_words$entry)
+swear_matched <- sqldf("select * from dialogues_n_users where body like '%" + famous_word + "%';")
+short.date = strftime(swear_matched$created_at, "%Y/%m")
+count_swear_dates <- count(short.date)
+
+n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
+```
+
+---
+
+## Swear words (2)
+
+```{r, eval=TRUE, echo=TRUE, comment = NA, results = "asis"}
+load(file="swear_plot_obj.RData")
+n1
+```
+
+---
+
+## Multilayer analysis
+
+1. muxViz - Visualization of interconnected multilayer networks
+  * aditionaly allows to e.g. make multilayer centrality analysis etc.
+2. Different algorithms for connecting layers
+  * the most simple is (n-x/n)
+  * it means edge in at least 2 layers of 3 is required
+3. Possible to detect communities in such multilayered networks

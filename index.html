@@ -60,7 +60,7 @@
 
 <ul>
 <li>vaious definitions, multiple subnetworks, but same data</li>
-<li>a true social network - people who spoke AND coded together</li>
+<li>a true social network - people who spoke and/or coded together and/or follow each other..</li>
 </ul></li>
 <li>What I found out, some results,
 
@@ -84,11 +84,13 @@
   </hgroup>
   <article data-timings="">
     <div class='well'>
-<p>You can download this presentation offline here:</p>
+<p><b>You can download this presentation offline here:</b></p>
+<p>https://github.com/oskar-j/slidify-presentations-topic1</p>
 </div>
 
 <div class='well'>
-<p>Sources and data is available here:</p>
+<p><b>Sources and data</b> is available here:</p>
+<p>https://github.com/wikiteams/gh-torrent-queries</p>
 </div>
 
   </article>
@@ -131,6 +133,42 @@
 
 <slide class="" id="slide-4" style="background:;">
   <hgroup>
+    <h2>Where discussion is taking place?</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class='well'>
+<p>Please visit this <b>'developer's manual'</b> for better insight:</p>
+<p>https://developer.github.com/guides/working-with-comments/</p>
+</div>
+
+<div class='well'>
+<p>If you are less familiar with GitHub, start with <b>'the guide':</b></p>
+<p>https://guides.github.com/activities/hello-world/#intro</p>
+<p>It's also called "Hello World in 10 minutes"</p>
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-5" style="background:;">
+  <hgroup>
+    <h3>What you need to know</h3>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Discussion, same as wiki pages and README files, uses a Markdown syntax.</li>
+<li>It also have emoticons</li>
+<li>You can cite somebody or call him by login (with the &#39;@&#39; char)</li>
+<li>Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-6" style="background:;">
+  <hgroup>
     <h3>Possible data-sources</h3>
   </hgroup>
   <article data-timings="">
@@ -140,11 +178,11 @@
   <p><strong>GitHub Archive</strong></p>
 
 <ul>
-<li>document-oriented data</li>
-<li>document structure, vulnerable to constant change</li>
-<li>unlimited time periods and easy refill from the GitHub Archive</li>
-<li>includes only a full body of <em>PullRequest</em> comment, rest of utterances one needs to download directly from the GitHub</li>
-<li>includes much more of <em>meta-information</em></li>
+<li>document-oriented JSON data</li>
+<li>document structure (MongoDB), vulnerable to constant change</li>
+<li>unlimited time periods and easy refill from the GitHub Archive (wget -&gt; mongoimport)</li>
+<li>includes only a full body of <em>PullRequest</em> comment, rest of utterances one needs to download directly from the GitHub through web</li>
+<li>includes much more of <em>meta-information</em>!</li>
 </ul>
 
 </div>
@@ -153,10 +191,10 @@
 
 <ul>
 <li>table-suctured relational data</li>
-<li>well structured - they&#39;re in defined database tables</li>
+<li>well structured - they&#39;re in defined MySQL database tables</li>
 <li>time period limited to the date of last SQL dumps</li>
 <li>includes the body (message) of only <em>PullRequest</em> comment and a <em>Commit</em> comment, body <strong>is truncated to 256 chars</strong> :(</li>
-<li>includes additional information about <em>timestamp, author, and commit id / pull request id</em>, but nothing more</li>
+<li>includes additional information about <em>timestamp, author, and commit id / pull request id</em>, but nothing more in particulat table..</li>
 </ul>
 
 </div>
@@ -164,29 +202,125 @@
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-5" style="background:;">
+<slide class="" id="slide-7" style="background:;">
+  <hgroup>
+    <h3>Possible data-sources (2)</h3>
+  </hgroup>
+  <article data-timings="">
+    <p>For rapid data analysis, you can try using Google BigQuery, there is GitHub archive data already included in fast engine using propertiary BigQuery Language (BQL).</p>
+
+<p>Alternativly, you can use GitHub Torrent mysql web-interface (console), but don&#39;t expect good relability neither performance..</p>
+
+<div class='well'>
+<p>The best of course is using local copy of GHA / GHT data.</p>
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-8" style="background:;">
   <hgroup>
     <h2>Creating discussion network</h2>
   </hgroup>
   <article data-timings="">
-    
+    <p>Data genesis</p>
+
+<ol>
+<li>I made union of Commit Comments and Pull Request Comments in MySQL instance</li>
+<li><p>Loaded into R and joined with GitHub users</p>
+
+<pre><code class="r">dialogues_n_users &lt;- sqldf(&quot;select d.*, u.login from dialogues d
+                          join users u on d.user_id = u.id&quot;);
+</code></pre></li>
+<li><p>Count contributions per discussion page</p>
+
+<pre><code class="r">aggregates &lt;- sqldf(&quot;select commit_id, login, count(login) as n
+                   from dialogues_n_users d group by commit_id, login&quot;);
+</code></pre></li>
+</ol>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-6" style="background:;">
+<slide class="" id="slide-9" style="background:;">
+  <hgroup>
+    <h2>Creating discussion network (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>4. Count how many times users spoke with each other (under any discussion page - in whole GitHub)</p>
+
+<pre><code class="r">activity_network &lt;- sqldf(&quot;SELECT a1.login as login1, a2.login as login2,
+                              a1.n as c1, a2.n as c2
+                              FROM aggregates a1
+                              LEFT JOIN aggregates a2
+                              ON a1.commit_id = a2.commit_id
+                              WHERE a1.login &lt; a2.login;&quot;)
+network &lt;- sqldf(&quot;SELECT login1, login2, count(*) as weight
+                 from activity_network group by login1, login2&quot;)
+network_matrix &lt;- as.matrix(network)
+</code></pre>
+
+<div class='well'>
+<p>https://github.com/wikiteams/gh-torrent-queries/blob/master/discussions-network/analyze.R</p>
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Network schema</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li><strong>Discussion</strong> network</li>
+</ul>
+
+<pre><code class="wolfram, echo=TRUE">Graph[{B \[UndirectedEdge] A}]
+</code></pre>
+
+<p><img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec1.png"/></p>
+
+<ul>
+<li><strong>Citing</strong> network</li>
+<li><strong>Mentioning</strong> network</li>
+<li>(both can be combined to one network)</li>
+</ul>
+
+<pre><code class="wolfram, echo=TRUE">Graph[{B \[DirectedEdge] A}]
+</code></pre>
+
+<p><img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec2.png"/></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Network properties</h2>
   </hgroup>
   <article data-timings="">
-    
+    <pre><code class="r">&gt; summary(dialogues_n_users)
+</code></pre>
+
+<p><img src="https://dl.dropboxusercontent.com/u/103068909/summary_dialogues.png" /></p>
+
+<pre><code class="r">&gt; summary(network_matrix)
+</code></pre>
+
+<p><img src="https://dl.dropboxusercontent.com/u/103068909/summary_matrix.png" /></p>
+
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-7" style="background:;">
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
-    <h2>Network propertes (2)</h2>
+    <h2>Network properties (2)</h2>
   </hgroup>
   <article data-timings="">
     <div class='well'>
@@ -212,13 +346,75 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-8" style="background:;">
+<slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>(Smaller) sample discussion network</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="sql">select * from project_members_with_owners pm join selected_repos sr on pm.repo_id = sr.repo_id;
 </code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-14" style="background:;">
+  <hgroup>
+    <h2>Swear words</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">library(sqldf)
+library(plyr)
+library(rCharts)
+
+swear_words &lt;- read.csv(&quot;C:/big data/swearing.csv&quot;)
+names(swear_words)[1] &lt;- &quot;entry&quot;
+swear_words$entry &lt;- as.character(swear_words$entry)
+swear_matched &lt;- sqldf(&quot;select * from dialogues_n_users where body like &#39;%&quot; + famous_word + &quot;%&#39;;&quot;)
+short.date = strftime(swear_matched$created_at, &quot;%Y/%m&quot;)
+count_swear_dates &lt;- count(short.date)
+
+n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
+</code></pre>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-15" style="background:;">
+  <hgroup>
+    <h2>Swear words (2)</h2>
+  </hgroup>
+  <article data-timings="">
+    <pre><code class="r">load(file=&quot;swear_plot_obj.RData&quot;)
+n1
+</code></pre>
+
+<p><iframe src=' assets/fig/unnamed-chunk-9-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-16" style="background:;">
+  <hgroup>
+    <h2>Multilayer analysis</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>muxViz - Visualization of interconnected multilayer networks
+
+<ul>
+<li>aditionaly allows to e.g. make multilayer centrality analysis etc.</li>
+</ul></li>
+<li>Different algorithms for connecting layers
+
+<ul>
+<li>the most simple is (n-x/n)</li>
+<li>it means edge in at least 2 layers of 3 is required</li>
+</ul></li>
+<li>Possible to detect communities in such multilayered networks</li>
+</ol>
 
   </article>
   <!-- Presenter Notes -->
@@ -248,32 +444,80 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=4 title='Possible data-sources'>
+        data-slide=4 title='Where discussion is taking place?'>
          4
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=5 title='Creating discussion network'>
+        data-slide=5 title='What you need to know'>
          5
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=6 title='Network properties'>
+        data-slide=6 title='Possible data-sources'>
          6
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=7 title='Network propertes (2)'>
+        data-slide=7 title='Possible data-sources (2)'>
          7
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=8 title='(Smaller) sample discussion network'>
+        data-slide=8 title='Creating discussion network'>
          8
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=9 title='Creating discussion network (2)'>
+         9
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=10 title='Network schema'>
+         10
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=11 title='Network properties'>
+         11
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=12 title='Network properties (2)'>
+         12
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=13 title='(Smaller) sample discussion network'>
+         13
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=14 title='Swear words'>
+         14
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=15 title='Swear words (2)'>
+         15
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=16 title='Multilayer analysis'>
+         16
       </a>
     </li>
   </ul>
