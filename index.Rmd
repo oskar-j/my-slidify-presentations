@@ -272,9 +272,10 @@ n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
 
 ## Swear words (2)
 
-```{r, eval=TRUE, echo=TRUE, comment = NA, results = "asis"}
+```{r, eval=TRUE, echo=TRUE, results = "asis"}
 load(file="swear_plot_obj.RData")
-n1
+# n1$print("chart_swear_words")
+# n1  -- won't show up in browser, issue bug to slidify maybe?
 ```
 
 <center>

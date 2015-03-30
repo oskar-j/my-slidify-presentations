@@ -280,12 +280,13 @@ n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
 
 ```r
 load(file="swear_plot_obj.RData")
-n1
+# n1$print("chart_swear_words")
+# n1  -- won't show up in browser, issue bug to slidify maybe?
 ```
 
-<iframe src=' assets/fig/unnamed-chunk-10-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
-
-<img src="" />
+<center>
+<img src="https://dl.dropboxusercontent.com/u/103068909/swearing.png" />
+</center>
 
 ---
 
