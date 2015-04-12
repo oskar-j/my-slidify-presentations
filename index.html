@@ -53,14 +53,16 @@
 <li>Getting more insights into what&#39;s there,
 
 <ul>
-<li>global data and &quot;private&quot; chats from all over the world</li>
+<li>global buzz-having repositories and small teams as well</li>
+<li>all of them are coordinating their work through written communication</li>
 <li>calculated simple yet meaningfull statistics</li>
 </ul></li>
 <li>The discussion network,
 
 <ul>
 <li>vaious definitions, multiple subnetworks, but same data</li>
-<li>a true social network - people who spoke and/or coded together and/or follow each other..</li>
+<li>more than one scope of such network</li>
+<li>a true social network - people who spoke and/or coded together and/or follow(-ed) each other..</li>
 </ul></li>
 <li>What I found out, some results,
 
@@ -85,12 +87,19 @@
   <article data-timings="">
     <div class='well'>
 <p><b>You can download this presentation offline here:</b></p>
-<p>https://github.com/oskar-j/slidify-presentations-topic1</p>
+<p><a href='https://github.com/oskar-j/slidify-presentations-topic1'>https://github.com/oskar-j/slidify-presentations-topic1</a></p>
 </div>
 
 <div class='well'>
 <p><b>Sources and data</b> is available here:</p>
-<p>https://github.com/wikiteams/gh-torrent-queries</p>
+<p><a href='https://github.com/wikiteams/gh-torrent-queries'>https://github.com/wikiteams/gh-torrent-queries</a></p>
+<p><a href='https://github.com/oskar-j/slidify-presentations-topic1'>https://github.com/oskar-j/slidify-presentations-topic1</a></p>
+<p><a href='https://github.com/wikiteams/linda-nlp'>https://github.com/wikiteams/linda-nlp</a></p>
+</div>
+
+<div class='well'>
+<p><b>Draft</b> paper with raw data:</p>
+<p><a href='https://dl.dropboxusercontent.com/u/103068909/recognizing-dialogue-acts-on-github-abstract.pdf'>https://dl.dropboxusercontent.com/u/103068909/recognizing-dialogue-acts-on-github-abstract.pdf</a></p>
 </div>
 
   </article>
@@ -119,7 +128,7 @@
   <button class="quiz-clear btn btn-danger">Clear</button>
   
   <div class="quiz-hint">
-  <p>Programmers on GitHub discuss their work and ask for pull-requests (of code they created) with help of the GitHub web interface.</p>
+  <p>Programmers on GitHub discuss their work and ask for pull-requests (of code they created) with help of the GitHub web interface. In very rare cases, someone can have an external tool to submit comments through GitHub API.</p>
 
 </div>
 <div class="quiz-explanation">
@@ -138,12 +147,12 @@
   <article data-timings="">
     <div class='well'>
 <p>Please visit this <b>'developer's manual'</b> for better insight:</p>
-<p>https://developer.github.com/guides/working-with-comments/</p>
+<p><a href="https://developer.github.com/guides/working-with-comments/">https://developer.github.com/guides/working-with-comments/</a></p>
 </div>
 
 <div class='well'>
 <p>If you are less familiar with GitHub, start with <b>'the guide':</b></p>
-<p>https://guides.github.com/activities/hello-world/#intro</p>
+<p><a href="https://guides.github.com/activities/hello-world/#intro">https://guides.github.com/activities/hello-world/#intro</a></p>
 <p>It's also called "Hello World in 10 minutes"</p>
 </div>
 
@@ -157,17 +166,18 @@
   </hgroup>
   <article data-timings="">
     <ul>
-<li>Discussion, same as wiki pages and README files, uses a Markdown syntax</li>
-<li>It also have emoticons placed between double-colons, e.g. :+1: </li>
-<li>You can cite somebody or call him by login (with the &#39;@&#39; char)</li>
-<li>Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission</li>
+<li>Discussions, same as wiki pages and <code>README</code> files, use a <code>Markdown</code> syntax</li>
+<li>They also have emoticons placed between double-colons, e.g. <code>:+1:</code></li>
+<li>You can cite somebody or call him by login (with the <code>&#39;@&#39;</code> char)</li>
+<li>Keep in mind that discussion always occurs under a change or integration request (pull request) or issue submission</li>
 <li>You can paste code blocks and ony objects supported by Markdown syntax</li>
 <li>Detecting quoting is tricky, but in most cases, it is recognized by this pattern:
 
 <ul>
-<li>starts with: &quot;On [date] user <e-mail> wrote:&quot;</li>
-<li>&#39;&gt;&#39; char starting every line in-a-quote</li>
+<li>starts with: <code>&quot;On [date] user &lt;e-mail&gt; wrote:&quot;</code></li>
+<li><code>&#39;&gt;&#39;</code> char starting every line in-a-quote</li>
 </ul></li>
+<li>It can have any language used worldwide and is always (in technical terms) properly formated <code>UTF-8</code> text</li>
 </ul>
 
   </article>
@@ -214,13 +224,17 @@
     <h3>Possible data-sources (2)</h3>
   </hgroup>
   <article data-timings="">
-    <p>For rapid data analysis, you can try using Google BigQuery, there is GitHub archive data already included in fast engine using propertiary BigQuery Language (BQL).</p>
+    <p>For rapid data analysis, you can try using <code>Google BigQuery</code>, there is GitHub archive data (called <code>timeline</code>) already included in fast engine using propertiary BigQuery Language (BQL).</p>
 
-<p>Alternatively, you can use GitHub Torrent mysql web-interface (console), but don&#39;t expect good relability neither performance..</p>
+<p>Alternatively, you can use GitHub Torrent <code>MySQL web-interface</code>, but don&#39;t expect good relability neither performance.</p>
+
+<p>Web-scrapping always requires executing JavaScript.</p>
 
 <div class='well'>
 <p>The best of course is using local copy of GHA / GHT data.</p>
 </div>
+
+<p>When using MySQL, set encoding collation to <code>utf8_unicode_ci</code>.</p>
 
   </article>
   <!-- Presenter Notes -->
@@ -234,16 +248,22 @@
     <p>Data genesis</p>
 
 <ol>
-<li>I made union of Commit Comments and Pull Request Comments in MySQL instance</li>
-<li><p>Loaded into R and joined with GitHub users</p>
+<li>I made union of <code>Commit Comments</code> and <code>Pull Request Comments</code> in MySQL instance of <a href="http://ghtorrent.org/relational.html">GitHub Torrent</a></li>
+<li><p>Loaded into <code>R</code> and joined with <code>GitHub users</code></p>
 
-<pre><code class="r">dialogues_n_users &lt;- sqldf(&quot;select d.*, u.login from dialogues d
-                          join users u on d.user_id = u.id&quot;);
+<pre><code class="r">dialogues_n_users &lt;- sqldf(&quot;select d.*, u.login from dialogues d join users u on d.user_id = u.id&quot;);
+</code></pre>
+
+<pre><code class="r">&gt; nrow(dialogues_n_users)
+[1] 2923703
 </code></pre></li>
 <li><p>Count contributions per discussion page</p>
 
-<pre><code class="r">aggregates &lt;- sqldf(&quot;select commit_id, login, count(login) as n
-                   from dialogues_n_users d group by commit_id, login&quot;);
+<pre><code class="r">aggregates &lt;- sqldf(&quot;select commit_id, login, count(login) as n from dialogues_n_users d group by commit_id, login&quot;);
+</code></pre>
+
+<pre><code class="r">&gt; nrow(aggregates)
+[1] 1273025
 </code></pre></li>
 </ol>
 
@@ -256,6 +276,22 @@
     <h2>Creating discussion network (2)</h2>
   </hgroup>
   <article data-timings="">
+    <pre><code class="r">&gt; summary(aggregates[aggregates$n &lt; 50, c(&#39;n&#39;)])
+   Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
+   1.000    1.000    1.000    2.297    2.000    4566.000
+</code></pre>
+
+<p><img src="https://dl.dropboxusercontent.com/u/103068909/aggregates-typical-number-of-utt-under-dialogue.png" alt="aggregates-typical-number-of-utt-under-dialogue.png"></p>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-10" style="background:;">
+  <hgroup>
+    <h2>Creating discussion network (3)</h2>
+  </hgroup>
+  <article data-timings="">
     <p>4. Count how many times users spoke with each other (under any discussion page - in whole GitHub)</p>
 
 <pre><code class="r">activity_network &lt;- sqldf(&quot;SELECT a1.login as login1, a2.login as login2,
@@ -264,9 +300,15 @@
                               LEFT JOIN aggregates a2
                               ON a1.commit_id = a2.commit_id
                               WHERE a1.login &lt; a2.login;&quot;)
-network &lt;- sqldf(&quot;SELECT login1, login2, count(*) as weight
-                 from activity_network group by login1, login2&quot;)
+network &lt;- sqldf(&quot;SELECT login1, login2, count(*) as weight from activity_network group by login1, login2&quot;)
 network_matrix &lt;- as.matrix(network)
+</code></pre>
+
+<pre><code class="r">&gt; summary(network[network$weight &lt; 500, c(&#39;weight&#39;)])
+   Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
+   1.000    1.000    1.000    1.243    1.000    431.000
+&gt; nrow(network)
+[1] 1340327
 </code></pre>
 
 <p>5. Returns a matrix of <strong>unique paris (Vx, Vy)</strong></p>
@@ -275,7 +317,7 @@ network_matrix &lt;- as.matrix(network)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-10" style="background:;">
+<slide class="" id="slide-11" style="background:;">
   <hgroup>
     <h2>Creating discussion network (3)</h2>
   </hgroup>
@@ -294,7 +336,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-11" style="background:;">
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
     <h2>Network schema</h2>
   </hgroup>
@@ -323,7 +365,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>Network properties</h2>
   </hgroup>
@@ -342,7 +384,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>Network properties (2)</h2>
   </hgroup>
@@ -370,7 +412,7 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
+<slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>(Smaller) sample discussion network</h2>
   </hgroup>
@@ -394,7 +436,7 @@ on d.user_id = s.user_id;
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-15" style="background:;">
+<slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>Swear words</h2>
   </hgroup>
@@ -417,7 +459,7 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-16" style="background:;">
+<slide class="" id="slide-17" style="background:;">
   <hgroup>
     <h2>Swear words (2)</h2>
   </hgroup>
@@ -427,7 +469,7 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
 n1 # -- won&#39;t show up in browser, issue bug to slidify maybe?
 </code></pre>
 
-<p><iframe src=' assets/fig/unnamed-chunk-10-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
+<p><iframe src=' assets/fig/unnamed-chunk-14-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
 
 <!-- <center>
 <img src="https://dl.dropboxusercontent.com/u/103068909/swearing.png" />
@@ -437,7 +479,7 @@ n1 # -- won&#39;t show up in browser, issue bug to slidify maybe?
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-17" style="background:;">
+<slide class="" id="slide-18" style="background:;">
   <hgroup>
     <h2>NLP analysis</h2>
   </hgroup>
@@ -462,7 +504,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-18" style="background:;">
+<slide class="" id="slide-19" style="background:;">
   <hgroup>
     <h2>NLP analysis (2)</h2>
   </hgroup>
@@ -475,7 +517,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-19" style="background:;">
+<slide class="" id="slide-20" style="background:;">
   <hgroup>
     <h2>Multilayer analysis</h2>
   </hgroup>
@@ -495,6 +537,50 @@ sentyment_subj = text_data.sentiment.subjectivity
 <li>Possible to detect communities in such multilayered networks</li>
 </ol>
 
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-21" style="background:;">
+  <hgroup>
+    <h2>Recognizing dialogue acts</h2>
+  </hgroup>
+  <article data-timings="">
+    <ol>
+<li>In short - every utterances have 1 or more dialogue acts (it&#39;s a type of speech classification)</li>
+<li>It&#39;s a microtask for human, but we can tag a represantative dataset and apply supervised machine learning to classify rest of the dialogues</li>
+<li>Apply the <a href="https://gist.github.com/oskar-j/181813226e7c4fa9c3c0">tf-idf algorithm</a> to select maximally diverse set of utterances.
+<code>{python}
+from sklearn.feature_extraction.text import TfidfVectorizer
+</code></li>
+<li>Tag them with min 2 person team and ask a 3rd person (judge) to resolve doubts.</li>
+</ol>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-22" style="background:;">
+  <hgroup>
+    <h2>Text annotation tools</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>There is a good list on Quora: <a href="http://www.quora.com/Natural-Language-Processing/What-are-the-best-tools-for-manually-annotating-a-text-corpus-with-entities-and-relationships">&quot;Natural Language Processing: What are the best tools for manually annotating a text corpus with entities and relationships?&quot;</a></li>
+<li>In my humble opinion, stay away from BRAT Annotation Tool and some old standalone programs for tagging - they are not scalable and very often buggy.</li>
+<li>At this time I used the <a href="http://sourceforge.net/p/gate/code/HEAD/tree/teamware/trunk/">GATE Teamware</a>.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-23" style="background:;">
+  <hgroup>
+    <h2>First results from taggging (1st Q of 2014)</h2>
+  </hgroup>
+  <article data-timings="">
+    
   </article>
   <!-- Presenter Notes -->
 </slide>
@@ -565,56 +651,80 @@ sentyment_subj = text_data.sentiment.subjectivity
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Network schema'>
+        data-slide=11 title='Creating discussion network (3)'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Network properties'>
+        data-slide=12 title='Network schema'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Network properties (2)'>
+        data-slide=13 title='Network properties'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='(Smaller) sample discussion network'>
+        data-slide=14 title='Network properties (2)'>
          14
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='Swear words'>
+        data-slide=15 title='(Smaller) sample discussion network'>
          15
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Swear words (2)'>
+        data-slide=16 title='Swear words'>
          16
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='NLP analysis'>
+        data-slide=17 title='Swear words (2)'>
          17
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='NLP analysis (2)'>
+        data-slide=18 title='NLP analysis'>
          18
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='Multilayer analysis'>
+        data-slide=19 title='NLP analysis (2)'>
          19
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=20 title='Multilayer analysis'>
+         20
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=21 title='Recognizing dialogue acts'>
+         21
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=22 title='Text annotation tools'>
+         22
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=23 title='First results from taggging (1st Q of 2014)'>
+         23
       </a>
     </li>
   </ul>

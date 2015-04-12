@@ -15,11 +15,13 @@ knit        : slidify::knit2slides
 
 1. How I gathered discussions from the GitHub,
 2. Getting more insights into what's there,
-  * global data and "private" chats from all over the world
+  * global buzz-having repositories and small teams as well
+  * all of them are coordinating their work through written communication
   * calculated simple yet meaningfull statistics
 3. The discussion network,
   * vaious definitions, multiple subnetworks, but same data
-  * a true social network - people who spoke and/or coded together and/or follow each other..
+  * more than one scope of such network
+  * a true social network - people who spoke and/or coded together and/or follow(-ed) each other..
 4. What I found out, some results,
   * you will be the very first few in the world, to who I will present some interesting findings about utterances on the GitHub
 5. Summary and Q&A time.
@@ -39,11 +41,17 @@ library(knitr)
 
 <div class='well'>
 <p><b>You can download this presentation offline here:</b></p>
-<p>https://github.com/oskar-j/slidify-presentations-topic1</p>
+<p><a href='https://github.com/oskar-j/slidify-presentations-topic1'>https://github.com/oskar-j/slidify-presentations-topic1</a></p>
 </div>
 <div class='well'>
 <p><b>Sources and data</b> is available here:</p>
-<p>https://github.com/wikiteams/gh-torrent-queries</p>
+<p><a href='https://github.com/wikiteams/gh-torrent-queries'>https://github.com/wikiteams/gh-torrent-queries</a></p>
+<p><a href='https://github.com/oskar-j/slidify-presentations-topic1'>https://github.com/oskar-j/slidify-presentations-topic1</a></p>
+<p><a href='https://github.com/wikiteams/linda-nlp'>https://github.com/wikiteams/linda-nlp</a></p>
+</div>
+<div class='well'>
+<p><b>Draft</b> paper with raw data:</p>
+<p><a href='https://dl.dropboxusercontent.com/u/103068909/recognizing-dialogue-acts-on-github-abstract.pdf'>https://dl.dropboxusercontent.com/u/103068909/recognizing-dialogue-acts-on-github-abstract.pdf</a></p>
 </div>
 
 --- &radio
@@ -59,7 +67,7 @@ In which way would you describe the discussion dimension in the GitHub portal?
 
 *** .hint
 
-Programmers on GitHub discuss their work and ask for pull-requests (of code they created) with help of the GitHub web interface.
+Programmers on GitHub discuss their work and ask for pull-requests (of code they created) with help of the GitHub web interface. In very rare cases, someone can have an external tool to submit comments through GitHub API.
 
 *** .explanation
 
@@ -71,11 +79,11 @@ Programmers on GitHub discuss their work and ask for pull-requests (of code they
 
 <div class='well'>
 <p>Please visit this <b>'developer's manual'</b> for better insight:</p>
-<p>https://developer.github.com/guides/working-with-comments/</p>
+<p><a href="https://developer.github.com/guides/working-with-comments/">https://developer.github.com/guides/working-with-comments/</a></p>
 </div>
 <div class='well'>
 <p>If you are less familiar with GitHub, start with <b>'the guide':</b></p>
-<p>https://guides.github.com/activities/hello-world/#intro</p>
+<p><a href="https://guides.github.com/activities/hello-world/#intro">https://guides.github.com/activities/hello-world/#intro</a></p>
 <p>It's also called "Hello World in 10 minutes"</p>
 </div>
 
@@ -83,14 +91,15 @@ Programmers on GitHub discuss their work and ask for pull-requests (of code they
 
 ### What you need to know
 
-* Discussion, same as wiki pages and README files, uses a Markdown syntax
-* It also have emoticons placed between double-colons, e.g. :+1: 
-* You can cite somebody or call him by login (with the '@' char)
-* Keep in mind that discussion always occurs under a CHANGE or Integration Request (Pull Request) or Issue submission
+* Discussions, same as wiki pages and `README` files, use a `Markdown` syntax
+* They also have emoticons placed between double-colons, e.g. `:+1:`
+* You can cite somebody or call him by login (with the `'@'` char)
+* Keep in mind that discussion always occurs under a change or integration request (pull request) or issue submission
 * You can paste code blocks and ony objects supported by Markdown syntax
 * Detecting quoting is tricky, but in most cases, it is recognized by this pattern:
-  * starts with: "On [date] user <e-mail> wrote:"
-  * '>' char starting every line in-a-quote
+  * starts with: `"On [date] user <e-mail> wrote:"`
+  * `'>'` char starting every line in-a-quote
+* It can have any language used worldwide and is always (in technical terms) properly formated `UTF-8` text
 
 --- &twocol w1:50% w2:50%
 ### Possible data-sources
@@ -118,13 +127,17 @@ Data acquisition. Hence **3** types of discussions: dialogue under issue/feature
 
 ### Possible data-sources (2)
 
-For rapid data analysis, you can try using Google BigQuery, there is GitHub archive data already included in fast engine using propertiary BigQuery Language (BQL).
+For rapid data analysis, you can try using `Google BigQuery`, there is GitHub archive data (called `timeline`) already included in fast engine using propertiary BigQuery Language (BQL).
 
-Alternatively, you can use GitHub Torrent mysql web-interface (console), but don't expect good relability neither performance..
+Alternatively, you can use GitHub Torrent `MySQL web-interface`, but don't expect good relability neither performance.
+
+Web-scrapping always requires executing JavaScript.
 
 <div class='well'>
 <p>The best of course is using local copy of GHA / GHT data.</p>
 </div>
+
+When using MySQL, set encoding collation to `utf8_unicode_ci`.
 
 ---
 
@@ -132,21 +145,38 @@ Alternatively, you can use GitHub Torrent mysql web-interface (console), but don
 
 Data genesis
 
-1. I made union of Commit Comments and Pull Request Comments in MySQL instance
-2. Loaded into R and joined with GitHub users
+1. I made union of `Commit Comments` and `Pull Request Comments` in MySQL instance of [GitHub Torrent](http://ghtorrent.org/relational.html)
+2. Loaded into `R` and joined with `GitHub users`
    ```{r, eval=FALSE}
-   dialogues_n_users <- sqldf("select d.*, u.login from dialogues d
-                              join users u on d.user_id = u.id");
+   dialogues_n_users <- sqldf("select d.*, u.login from dialogues d join users u on d.user_id = u.id");
+   ```
+   ```{r, eval=FALSE}
+   > nrow(dialogues_n_users)
+   [1] 2923703
    ```
 3. Count contributions per discussion page
    ```{r, eval=FALSE}
-   aggregates <- sqldf("select commit_id, login, count(login) as n
-                       from dialogues_n_users d group by commit_id, login");
+   aggregates <- sqldf("select commit_id, login, count(login) as n from dialogues_n_users d group by commit_id, login");
+   ```
+   ```{r, eval=FALSE}
+   > nrow(aggregates)
+   [1] 1273025
    ```
 
 ---
 
 ## Creating discussion network (2)
+
+```{r, eval=FALSE}
+> summary(aggregates[aggregates$n < 50, c('n')])
+   Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
+   1.000    1.000    1.000    2.297    2.000    4566.000
+```
+![aggregates-typical-number-of-utt-under-dialogue.png](https://dl.dropboxusercontent.com/u/103068909/aggregates-typical-number-of-utt-under-dialogue.png)
+
+---
+
+## Creating discussion network (3)
 
 4\. Count how many times users spoke with each other (under any discussion page - in whole GitHub)
 ```{r, eval=FALSE}
@@ -156,9 +186,15 @@ activity_network <- sqldf("SELECT a1.login as login1, a2.login as login2,
                               LEFT JOIN aggregates a2
                               ON a1.commit_id = a2.commit_id
                               WHERE a1.login < a2.login;")
-network <- sqldf("SELECT login1, login2, count(*) as weight
-                 from activity_network group by login1, login2")
+network <- sqldf("SELECT login1, login2, count(*) as weight from activity_network group by login1, login2")
 network_matrix <- as.matrix(network)
+```
+```{r, eval=FALSE}
+> summary(network[network$weight < 500, c('weight')])
+   Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
+   1.000    1.000    1.000    1.243    1.000    431.000
+> nrow(network)
+[1] 1340327
 ```
 
 5\. Returns a matrix of **unique paris (Vx, Vy)**
@@ -319,3 +355,28 @@ sentyment_subj = text_data.sentiment.subjectivity
   * the most simple is (n-x/n)
   * it means edge in at least 2 layers of 3 is required
 3. Possible to detect communities in such multilayered networks
+
+---
+
+## Recognizing dialogue acts
+
+1. In short - every utterances have 1 or more dialogue acts (it's a type of speech classification)
+2. It's a microtask for human, but we can tag a represantative dataset and apply supervised machine learning to classify rest of the dialogues
+3. Apply the [tf-idf algorithm](https://gist.github.com/oskar-j/181813226e7c4fa9c3c0) to select maximally diverse set of utterances.
+```{python}
+from sklearn.feature_extraction.text import TfidfVectorizer
+```
+4. Tag them with min 2 person team and ask a 3rd person (judge) to resolve doubts.
+
+---
+
+## Text annotation tools
+
+* There is a good list on Quora: ["Natural Language Processing: What are the best tools for manually annotating a text corpus with entities and relationships?"](http://www.quora.com/Natural-Language-Processing/What-are-the-best-tools-for-manually-annotating-a-text-corpus-with-entities-and-relationships)
+* In my humble opinion, stay away from BRAT Annotation Tool and some old standalone programs for tagging - they are not scalable and very often buggy.
+* At this time I used the [GATE Teamware](http://sourceforge.net/p/gate/code/HEAD/tree/teamware/trunk/).
+
+---
+
+## First results from taggging (1st Q of 2014)
+
