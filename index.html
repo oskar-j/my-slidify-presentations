@@ -438,6 +438,20 @@ on d.user_id = s.user_id;
 
 <slide class="" id="slide-16" style="background:;">
   <hgroup>
+    <h2>Network properties</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>One of the most important features in the graph theory, is a <code>clustering coefficient</code> of the network, sometimes called <code>transivity</code> (especially in R),</li>
+<li>Is a measure of the degree to which nodes in a graph tend to cluster together.</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-17" style="background:;">
+  <hgroup>
     <h2>Swear words</h2>
   </hgroup>
   <article data-timings="">
@@ -459,7 +473,7 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-17" style="background:;">
+<slide class="" id="slide-18" style="background:;">
   <hgroup>
     <h2>Swear words (2)</h2>
   </hgroup>
@@ -479,7 +493,7 @@ n1 # -- won&#39;t show up in browser, issue bug to slidify maybe?
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-18" style="background:;">
+<slide class="" id="slide-19" style="background:;">
   <hgroup>
     <h2>NLP analysis</h2>
   </hgroup>
@@ -504,7 +518,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-19" style="background:;">
+<slide class="" id="slide-20" style="background:;">
   <hgroup>
     <h2>NLP analysis (2)</h2>
   </hgroup>
@@ -517,7 +531,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-20" style="background:;">
+<slide class="" id="slide-21" style="background:;">
   <hgroup>
     <h2>Multilayer analysis</h2>
   </hgroup>
@@ -541,7 +555,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Recognizing dialogue acts</h2>
   </hgroup>
@@ -560,7 +574,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-22" style="background:;">
+<slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>Text annotation tools</h2>
   </hgroup>
@@ -575,10 +589,63 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-23" style="background:;">
+<slide class="" id="slide-24" style="background:;">
   <hgroup>
-    <h2>First results from taggging (1st Q of 2014)</h2>
+    <h2>My classification of utterances</h2>
   </hgroup>
+  <article data-timings="">
+    <ul>
+<li>Basing mostly on Ferschke et al. (2012),</li>
+<li>All of them have a <code>Wikipedia equivalent</code></li>
+<li><a href="https://dl.dropboxusercontent.com/u/103068909/GitHub%20dialog%20acts%20-%20Dialog%20acts%20definition%20-%202014.pdf">List of dialogue acts</a> divided by a category: contribution criticism, explicit informative, information content, interpersonal</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-25" style="background:;">
+  <hgroup>
+    <h2>Some more or less important findings</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>there are short utterances, consisting on 1 or 2 words, like: &#39;meh&#39;, &#39;nvm&#39;, &#39;remove *&#39;, &#39;merge&#39;, &#39;blah&#39;, &#39;test&#39;, &#39;no description&#39;, &#39;....&#39;</li>
+<li>there are different distribution for issues and different for commits with pull request, i.e. issues will less likely <code>have contribution criticism</code>, while pull requests will have lot of them</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-26" style="background:;">
+  <hgroup>
+    <h2>First results from taggging</h2>
+  </hgroup>
+  <article data-timings="">
+    <ul>
+<li>most of the acts are <strong>explicit informative</strong></li>
+<li>some of them are rarely used - reconsider to avoid overfitting</li>
+</ul>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-27" style="background:;">
+  <hgroup>
+    <h2>End</h2>
+  </hgroup>
+  <article data-timings="">
+    <div class='well'>
+<p>Q & A time</p>
+</div>
+
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-28" style="background:;">
   <article data-timings="">
     
   </article>
@@ -681,50 +748,80 @@ from sklearn.feature_extraction.text import TfidfVectorizer
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Swear words'>
+        data-slide=16 title='Network properties'>
          16
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Swear words (2)'>
+        data-slide=17 title='Swear words'>
          17
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='NLP analysis'>
+        data-slide=18 title='Swear words (2)'>
          18
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='NLP analysis (2)'>
+        data-slide=19 title='NLP analysis'>
          19
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='Multilayer analysis'>
+        data-slide=20 title='NLP analysis (2)'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Recognizing dialogue acts'>
+        data-slide=21 title='Multilayer analysis'>
          21
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Text annotation tools'>
+        data-slide=22 title='Recognizing dialogue acts'>
          22
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='First results from taggging (1st Q of 2014)'>
+        data-slide=23 title='Text annotation tools'>
          23
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=24 title='My classification of utterances'>
+         24
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=25 title='Some more or less important findings'>
+         25
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=26 title='First results from taggging'>
+         26
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=27 title='End'>
+         27
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=28 title=''>
+         28
       </a>
     </li>
   </ul>

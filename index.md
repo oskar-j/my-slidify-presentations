@@ -295,6 +295,13 @@ on d.user_id = s.user_id;
 
 ---
 
+## Network properties
+
+* One of the most important features in the graph theory, is a `clustering coefficient` of the network, sometimes called `transivity` (especially in R),
+* Is a measure of the degree to which nodes in a graph tend to cluster together.
+
+---
+
 ## Swear words
 
 
@@ -390,5 +397,32 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 ---
 
-## First results from taggging (1st Q of 2014)
+## My classification of utterances
 
+* Basing mostly on Ferschke et al. (2012),
+* All of them have a `Wikipedia equivalent`
+* [List of dialogue acts](https://dl.dropboxusercontent.com/u/103068909/GitHub%20dialog%20acts%20-%20Dialog%20acts%20definition%20-%202014.pdf) divided by a category: contribution criticism, explicit informative, information content, interpersonal
+
+---
+
+## Some more or less important findings
+
+* there are short utterances, consisting on 1 or 2 words, like: 'meh', 'nvm', 'remove *', 'merge', 'blah', 'test', 'no description', '....'
+* there are different distribution for issues and different for commits with pull request, i.e. issues will less likely `have contribution criticism`, while pull requests will have lot of them
+
+---
+
+## First results from taggging
+
+* most of the acts are **explicit informative**
+* some of them are rarely used - reconsider to avoid overfitting
+
+---
+
+## End
+
+<div class='well'>
+<p>Q & A time</p>
+</div>
+
+---
