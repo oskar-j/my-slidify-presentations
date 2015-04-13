@@ -190,9 +190,8 @@
 <div style='float:left;width:48%;' class='centered'>
   <p><strong>GitHub Archive</strong></p>
 
-<ul style='font-size: 9px ;'>
-<li>document-oriented JSON data</li>
-<li>document structure (MongoDB), vulnerable to constant change</li>
+<ul>
+<li>document-oriented JSON data, document structure (MongoDB), vulnerable to constant change</li>
 <li>unlimited time periods and easy refill from the GitHub Archive (wget -&gt; mongoimport)</li>
 <li>includes only a full body of <em>PullRequest</em> comment, rest of utterances one needs to download directly from the GitHub through web</li>
 <li>includes much more of <em>meta-information</em>!</li>
@@ -203,10 +202,9 @@
   <p><strong>GitHub Torrent</strong></p>
 
 <ul>
-<li>table-suctured relational data</li>
-<li>well structured - they&#39;re in defined MySQL database tables</li>
+<li>table-suctured relational data, well structured - they&#39;re in defined MySQL database tables</li>
 <li>time period limited to the date of last SQL dumps</li>
-<li>includes the body (message) of only <em>PullRequest</em> comment and a <em>Commit</em> comment, body <strong>is truncated to 256 chars</strong> :(</li>
+<li>includes the body (message) of only <em>PullRequest</em> comment and a <em>Commit</em> comment, body <strong>is truncated to 256 chars</strong></li>
 <li>includes additional information about <em>timestamp, author, and commit id / pull request id</em>, but nothing more in particulat table..</li>
 </ul>
 
@@ -241,24 +239,20 @@
     <h2>Creating discussion network</h2>
   </hgroup>
   <article data-timings="">
-    <p>Data genesis</p>
-
-<ol>
+    <ol>
 <li>I made union of <code>Commit Comments</code> and <code>Pull Request Comments</code> in MySQL instance of <a href="http://ghtorrent.org/relational.html">GitHub Torrent</a></li>
 <li><p>Loaded into <code>R</code> and joined with <code>GitHub users</code></p>
 
-<pre><code class="r">dialogues_n_users &lt;- sqldf(&quot;select d.*, u.login from dialogues d join users u on d.user_id = u.id&quot;);
-</code></pre>
-
-<pre><code class="r">&gt; nrow(dialogues_n_users)
+<pre><code class="r">dialogues_n_users &lt;- sqldf(&quot;select d.*, u.login from dialogues d 
+                          join users u on d.user_id = u.id&quot;);
+&gt; nrow(dialogues_n_users)
 [1] 2923703
 </code></pre></li>
 <li><p>Count contributions per discussion page</p>
 
-<pre><code class="r">aggregates &lt;- sqldf(&quot;select commit_id, login, count(login) as n from dialogues_n_users d group by commit_id, login&quot;);
-</code></pre>
-
-<pre><code class="r">&gt; nrow(aggregates)
+<pre><code class="r">aggregates &lt;- sqldf(&quot;select commit_id, login, count(login) as n 
+                   from dialogues_n_users d group by commit_id, login&quot;);
+&gt; nrow(aggregates)
 [1] 1273025
 </code></pre></li>
 </ol>
@@ -300,6 +294,17 @@ network &lt;- sqldf(&quot;SELECT login1, login2, count(*) as weight from activit
 network_matrix &lt;- as.matrix(network)
 </code></pre>
 
+  </article>
+  <!-- Presenter Notes -->
+</slide>
+
+<slide class="" id="slide-11" style="background:;">
+  <hgroup>
+    <h2>Creating discussion network (4)</h2>
+  </hgroup>
+  <article data-timings="">
+    <p>4. Count how many times users spoke with each other (under any discussion page - in whole GitHub)</p>
+
 <pre><code class="r">&gt; summary(network[network$weight &lt; 500, c(&#39;weight&#39;)])
    Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
    1.000    1.000    1.000    1.243    1.000    431.000
@@ -313,9 +318,9 @@ network_matrix &lt;- as.matrix(network)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-11" style="background:;">
+<slide class="" id="slide-12" style="background:;">
   <hgroup>
-    <h2>Creating discussion network (3)</h2>
+    <h2>Creating discussion network (5)</h2>
   </hgroup>
   <article data-timings="">
     <pre><code class="r">g = graph.edgelist(network_matrix[,1:2],directed=FALSE)
@@ -332,7 +337,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-12" style="background:;">
+<slide class="" id="slide-13" style="background:;">
   <hgroup>
     <h2>Network schema</h2>
   </hgroup>
@@ -344,7 +349,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
 <pre><code class="wolfram, echo=TRUE">Graph[{B \[UndirectedEdge] A}]
 </code></pre>
 
-<p><img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec1.png"/></p>
+<p><center><img width="205" height="57" src="https://dl.dropboxusercontent.com/u/103068909/siec1.png"/></center></p>
 
 <ul>
 <li><strong>Citing</strong> network</li>
@@ -355,13 +360,13 @@ E(g)$weight=as.numeric(network_matrix[,3])
 <pre><code class="wolfram, echo=TRUE">Graph[{B \[DirectedEdge] A}]
 </code></pre>
 
-<p><img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec2.png"/></p>
+<p><center><img width="205" height="57" src="https://dl.dropboxusercontent.com/u/103068909/siec2.png"/></center></p>
 
   </article>
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-13" style="background:;">
+<slide class="" id="slide-14" style="background:;">
   <hgroup>
     <h2>Network properties</h2>
   </hgroup>
@@ -380,7 +385,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-14" style="background:;">
+<slide class="" id="slide-15" style="background:;">
   <hgroup>
     <h2>Network properties (2)</h2>
   </hgroup>
@@ -408,7 +413,7 @@ fastgreedy.community(g, merges=TRUE, modularity=TRUE,
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-15" style="background:;">
+<slide class="" id="slide-16" style="background:;">
   <hgroup>
     <h2>(Smaller) sample discussion network</h2>
   </hgroup>
@@ -432,7 +437,7 @@ on d.user_id = s.user_id;
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-16" style="background:;">
+<slide class="" id="slide-17" style="background:;">
   <hgroup>
     <h2>Network properties</h2>
   </hgroup>
@@ -446,7 +451,7 @@ on d.user_id = s.user_id;
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-17" style="background:;">
+<slide class="" id="slide-18" style="background:;">
   <hgroup>
     <h2>Swear words</h2>
   </hgroup>
@@ -469,7 +474,7 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-18" style="background:;">
+<slide class="" id="slide-19" style="background:;">
   <hgroup>
     <h2>Swear words (2)</h2>
   </hgroup>
@@ -479,7 +484,7 @@ n1 &lt;- rPlot(freq ~ x, data = count_swear_dates, type = &quot;point&quot;)
 n1 # -- won&#39;t show up in browser, issue bug to slidify maybe?
 </code></pre>
 
-<p><iframe src=' assets/fig/unnamed-chunk-14-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
+<p><iframe src=' assets/fig/unnamed-chunk-12-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style></p>
 
 <!-- <center>
 <img src="https://dl.dropboxusercontent.com/u/103068909/swearing.png" />
@@ -489,7 +494,7 @@ n1 # -- won&#39;t show up in browser, issue bug to slidify maybe?
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-19" style="background:;">
+<slide class="" id="slide-20" style="background:;">
   <hgroup>
     <h2>NLP analysis</h2>
   </hgroup>
@@ -514,7 +519,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-20" style="background:;">
+<slide class="" id="slide-21" style="background:;">
   <hgroup>
     <h2>NLP analysis (2)</h2>
   </hgroup>
@@ -527,7 +532,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-21" style="background:;">
+<slide class="" id="slide-22" style="background:;">
   <hgroup>
     <h2>Multilayer analysis</h2>
   </hgroup>
@@ -551,7 +556,7 @@ sentyment_subj = text_data.sentiment.subjectivity
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-22" style="background:;">
+<slide class="" id="slide-23" style="background:;">
   <hgroup>
     <h2>Recognizing dialogue acts</h2>
   </hgroup>
@@ -570,7 +575,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-23" style="background:;">
+<slide class="" id="slide-24" style="background:;">
   <hgroup>
     <h2>Text annotation tools</h2>
   </hgroup>
@@ -585,7 +590,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-24" style="background:;">
+<slide class="" id="slide-25" style="background:;">
   <hgroup>
     <h2>My classification of utterances</h2>
   </hgroup>
@@ -600,7 +605,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-25" style="background:;">
+<slide class="" id="slide-26" style="background:;">
   <hgroup>
     <h2>Some more or less important findings</h2>
   </hgroup>
@@ -614,7 +619,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-26" style="background:;">
+<slide class="" id="slide-27" style="background:;">
   <hgroup>
     <h2>First results from taggging</h2>
   </hgroup>
@@ -628,7 +633,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-27" style="background:;">
+<slide class="" id="slide-28" style="background:;">
   <hgroup>
     <h2>End</h2>
   </hgroup>
@@ -641,7 +646,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
   <!-- Presenter Notes -->
 </slide>
 
-<slide class="" id="slide-28" style="background:;">
+<slide class="" id="slide-29" style="background:;">
   <article data-timings="">
     
   </article>
@@ -714,110 +719,116 @@ from sklearn.feature_extraction.text import TfidfVectorizer
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=11 title='Creating discussion network (3)'>
+        data-slide=11 title='Creating discussion network (4)'>
          11
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=12 title='Network schema'>
+        data-slide=12 title='Creating discussion network (5)'>
          12
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=13 title='Network properties'>
+        data-slide=13 title='Network schema'>
          13
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=14 title='Network properties (2)'>
+        data-slide=14 title='Network properties'>
          14
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=15 title='(Smaller) sample discussion network'>
+        data-slide=15 title='Network properties (2)'>
          15
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=16 title='Network properties'>
+        data-slide=16 title='(Smaller) sample discussion network'>
          16
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=17 title='Swear words'>
+        data-slide=17 title='Network properties'>
          17
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=18 title='Swear words (2)'>
+        data-slide=18 title='Swear words'>
          18
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=19 title='NLP analysis'>
+        data-slide=19 title='Swear words (2)'>
          19
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=20 title='NLP analysis (2)'>
+        data-slide=20 title='NLP analysis'>
          20
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=21 title='Multilayer analysis'>
+        data-slide=21 title='NLP analysis (2)'>
          21
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=22 title='Recognizing dialogue acts'>
+        data-slide=22 title='Multilayer analysis'>
          22
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=23 title='Text annotation tools'>
+        data-slide=23 title='Recognizing dialogue acts'>
          23
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=24 title='My classification of utterances'>
+        data-slide=24 title='Text annotation tools'>
          24
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=25 title='Some more or less important findings'>
+        data-slide=25 title='My classification of utterances'>
          25
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=26 title='First results from taggging'>
+        data-slide=26 title='Some more or less important findings'>
          26
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=27 title='End'>
+        data-slide=27 title='First results from taggging'>
          27
       </a>
     </li>
     <li>
       <a href="#" target="_self" rel='tooltip' 
-        data-slide=28 title=''>
+        data-slide=28 title='End'>
          28
+      </a>
+    </li>
+    <li>
+      <a href="#" target="_self" rel='tooltip' 
+        data-slide=29 title=''>
+         29
       </a>
     </li>
   </ul>

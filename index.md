@@ -104,8 +104,7 @@ Data acquisition. Hence **3** types of discussions: dialogue under issue/feature
 *** =left
 
 **GitHub Archive**
-- document-oriented JSON data
-- document structure (MongoDB), vulnerable to constant change
+- document-oriented JSON data, document structure (MongoDB), vulnerable to constant change
 - unlimited time periods and easy refill from the GitHub Archive (wget -> mongoimport)
 - includes only a full body of *PullRequest* comment, rest of utterances one needs to download directly from the GitHub through web
 - includes much more of *meta-information*!
@@ -113,10 +112,9 @@ Data acquisition. Hence **3** types of discussions: dialogue under issue/feature
 *** =right
 
 **GitHub Torrent**
-- table-suctured relational data
-- well structured - they're in defined MySQL database tables
+- table-suctured relational data, well structured - they're in defined MySQL database tables
 - time period limited to the date of last SQL dumps
-- includes the body (message) of only *PullRequest* comment and a *Commit* comment, body **is truncated to 256 chars** :(
+- includes the body (message) of only *PullRequest* comment and a *Commit* comment, body **is truncated to 256 chars**
 - includes additional information about *timestamp, author, and commit id / pull request id*, but nothing more in particulat table..
 
 ---
@@ -139,26 +137,20 @@ When using MySQL, set encoding collation to `utf8_unicode_ci`.
 
 ## Creating discussion network
 
-Data genesis
-
 1. I made union of `Commit Comments` and `Pull Request Comments` in MySQL instance of [GitHub Torrent](http://ghtorrent.org/relational.html)
 2. Loaded into `R` and joined with `GitHub users`
    
    ```r
-   dialogues_n_users <- sqldf("select d.*, u.login from dialogues d join users u on d.user_id = u.id");
-   ```
-   
-   ```r
+   dialogues_n_users <- sqldf("select d.*, u.login from dialogues d 
+                              join users u on d.user_id = u.id");
    > nrow(dialogues_n_users)
    [1] 2923703
    ```
 3. Count contributions per discussion page
    
    ```r
-   aggregates <- sqldf("select commit_id, login, count(login) as n from dialogues_n_users d group by commit_id, login");
-   ```
-   
-   ```r
+   aggregates <- sqldf("select commit_id, login, count(login) as n 
+                       from dialogues_n_users d group by commit_id, login");
    > nrow(aggregates)
    [1] 1273025
    ```
@@ -192,6 +184,13 @@ network <- sqldf("SELECT login1, login2, count(*) as weight from activity_networ
 network_matrix <- as.matrix(network)
 ```
 
+---
+
+## Creating discussion network (4)
+
+4\. Count how many times users spoke with each other (under any discussion page - in whole GitHub)
+
+
 ```r
 > summary(network[network$weight < 500, c('weight')])
    Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
@@ -204,7 +203,7 @@ network_matrix <- as.matrix(network)
 
 ---
 
-## Creating discussion network (3)
+## Creating discussion network (5)
 
 
 ```r
@@ -226,7 +225,7 @@ E(g)$weight=as.numeric(network_matrix[,3])
 ```{wolfram, echo=TRUE}
 Graph[{B \[UndirectedEdge] A}]
 ```
-<img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec1.png"/>
+<center><img width="205" height="57" src="https://dl.dropboxusercontent.com/u/103068909/siec1.png"/></center>
 
 * **Citing** network
 * **Mentioning** network
@@ -235,7 +234,7 @@ Graph[{B \[UndirectedEdge] A}]
 ```{wolfram, echo=TRUE}
 Graph[{B \[DirectedEdge] A}]
 ```
-<img width="410" height="114" src="https://dl.dropboxusercontent.com/u/103068909/siec2.png"/>
+<center><img width="205" height="57" src="https://dl.dropboxusercontent.com/u/103068909/siec2.png"/></center>
 
 ---
 
@@ -330,7 +329,7 @@ load(file="swear_plot_obj.RData")
 n1 # -- won't show up in browser, issue bug to slidify maybe?
 ```
 
-<iframe src=' assets/fig/unnamed-chunk-14-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
+<iframe src=' assets/fig/unnamed-chunk-12-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 
 <!-- <center>
 <img src="https://dl.dropboxusercontent.com/u/103068909/swearing.png" />
