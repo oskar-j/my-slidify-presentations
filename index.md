@@ -99,7 +99,7 @@ Programmers on GitHub discuss their work and ask for pull-requests (of code they
 
 --- &twocol w1:50% w2:50%
 ### Possible data-sources
-Data acquisition. Hence **3** types of discussions: dialogue under issue/feature page, dialogue under a code commit, and a dialogue page under a pull request page. And you can get them from:
+Hence **3** types of discussions: dialogue under issue/feature page, dialogue under a code commit, and a dialogue page under a pull request page. And you can get them from:
 
 *** =left
 
@@ -163,7 +163,7 @@ When using MySQL, set encoding collation to `utf8_unicode_ci`.
 ```r
 > summary(aggregates[aggregates$n < 50, c('n')])
    Min.     1st Qu.  Median   Mean     3rd Qu.  Max.
-   1.000    1.000    1.000    2.297    2.000    4566.000
+   1.000    1.000    1.000    2.244    2.000    49.000
 ```
 ![aggregates-typical-number-of-utt-under-dialogue.png](https://dl.dropboxusercontent.com/u/103068909/aggregates-typical-number-of-utt-under-dialogue.png)
 
@@ -180,7 +180,8 @@ activity_network <- sqldf("SELECT a1.login as login1, a2.login as login2,
                               LEFT JOIN aggregates a2
                               ON a1.commit_id = a2.commit_id
                               WHERE a1.login < a2.login;")
-network <- sqldf("SELECT login1, login2, count(*) as weight from activity_network group by login1, login2")
+network <- sqldf("SELECT login1, login2, count(*) as weight 
+                  from activity_network group by login1, login2")
 network_matrix <- as.matrix(network)
 ```
 
@@ -262,14 +263,12 @@ Graph[{B \[DirectedEdge] A}]
 
 ```r
 library(igraph)
-
 mycutoff <- 3
 
 betweenness(g, directed = FALSE, weights = E(g)$weight, normalized = FALSE)
 edge.betweenness(g, directed = FALSE, weights = E(g)$weight)
 betweenness.estimate(g, directed = FALSE, cutoff = mycutoff,
                      weights = E(g)$weight, nobigint = TRUE)
-
 walktrap.community(g, weights = E(g)$weight, steps = 4, merges =
                       TRUE, modularity = TRUE, membership = TRUE)
 fastgreedy.community(g, merges=TRUE, modularity=TRUE,
@@ -326,14 +325,14 @@ n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
 ```r
 load(file="swear_plot_obj.RData")
 # n1$print("chart_swear_words")
-n1 # -- won't show up in browser, issue bug to slidify maybe?
+n1
 ```
 
 <iframe src=' assets/fig/unnamed-chunk-12-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 
-<!-- <center>
+<center>
 <img src="https://dl.dropboxusercontent.com/u/103068909/swearing.png" />
-</center> -->
+</center>
 
 ---
 
