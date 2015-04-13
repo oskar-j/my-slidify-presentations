@@ -23,7 +23,6 @@ knit        : slidify::knit2slides
   * more than one scope of such network
   * a true social network - people who spoke and/or coded together and/or follow(-ed) each other..
 4. What I found out, some results,
-  * you will be the very first few in the world, to who I will present some interesting findings about utterances on the GitHub
 5. Summary and Q&A time.
 
 <div class="well well-sm">
