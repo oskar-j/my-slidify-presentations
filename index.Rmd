@@ -321,7 +321,6 @@ n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
 ```{r, eval=TRUE, echo=TRUE, comment=NA, results = "asis"}
 load(file="swear_plot_obj.RData")
 # n1$print("chart_swear_words")
-n1
 ```
 
 <center>

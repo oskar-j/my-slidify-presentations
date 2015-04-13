@@ -329,10 +329,7 @@ n1 <- rPlot(freq ~ x, data = count_swear_dates, type = "point")
 ```r
 load(file="swear_plot_obj.RData")
 # n1$print("chart_swear_words")
-n1
 ```
-
-<iframe src=' assets/fig/unnamed-chunk-12-1.html ' scrolling='no' frameBorder='0' seamless class='rChart polycharts ' id=iframe- chart25901f846207 ></iframe> <style>iframe.rChart{ width: 100%; height: 400px;}</style>
 
 <center>
 <img src="https://dl.dropboxusercontent.com/u/103068909/swearing.png" />
